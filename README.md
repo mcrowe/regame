@@ -14,7 +14,7 @@ A React-inspired 2d game engine for Typescript.
 > npm install @mcrowe/regame --save
 
 ```js
-import Regame, { Camera, Scene }
+import Regame, { Camera, Scene } from '@mcrowe/regame'
 
 const canvas = document.getElementById('game')
 
