@@ -1,38 +1,58 @@
-import { Point, Camera, Model, Scene, RenderContext } from './types'
+import { Point, Camera, Model, Scene, RenderContext, Frame} from './types'
 
 
 type RectProps = { p: Point, w: number, h: number, color?: string }
 type CircleProps = { center: Point, radius: number, color?: string }
+type PolygonProps = { points: Point[], color?: string }
 type TextProps = { p: Point, message: string, size?: number, color?: string }
 
 
 const Rect = (props: RectProps) => (context: RenderContext) => {
   const { ctx, frame, camera } = context
 
+  const p = worldToScreen(props.p, camera, frame)
   const z = frame.width/camera.width
-  const sx = (props.p.x - camera.center.x) * z + frame.width/2
-  const sy = (props.p.y - camera.center.y) * z + frame.width/2
-  const sw = props.w * z
-  const sh = props.h * z
+  const w = props.w * z
+  const h = props.h * z
 
   ctx.beginPath()
   ctx.fillStyle = props.color || 'black'
-  ctx.rect(sx, sy, sw, sh)
+  ctx.rect(p.x, p.y, w, h)
   ctx.fill()
+}
+
+
+const Polygon = (props: PolygonProps) => (context: RenderContext) => {
+  const { ctx, frame, camera } = context
+
+  const z = frame.width/camera.width
+
+  const ps = props.points.map(p => worldToScreen(p, camera, frame))
+
+  ctx.fillStyle = props.color || 'black'
+  ctx.moveTo(ps[0].x, ps[0].y)
+  ctx.beginPath()
+
+  for (let i = 1; i < ps.length; i++) {
+    const p = ps[i]
+    ctx.lineTo(p.x, p.y)
+  }
+
+  ctx.closePath()
 }
 
 
 const Circle = (props: CircleProps) => (context: RenderContext) => {
   const { ctx, frame, camera } = context
 
+  const c = worldToScreen(props.center, camera, frame)
   const z = frame.width/camera.width
-  const sx = (props.center.x - camera.center.x) * z + frame.width/2
-  const sy = (props.center.y - camera.center.y) * z + frame.width/2
-  const sr = props.radius * z
+  const r = props.radius * z
+
 
   ctx.beginPath()
   ctx.fillStyle = props.color || 'black'
-  ctx.arc(sx, sy, sr, 0, 2 * Math.PI)
+  ctx.arc(c.x, c.y, r, 0, 2 * Math.PI)
   ctx.fill()
 }
 
@@ -47,3 +67,12 @@ const Text = (props: TextProps) => (context: RenderContext) => {
 
 
 export default { Rect, Circle, Text }
+
+
+function worldToScreen(p: Point, camera: Camera, frame: Frame): Point {
+  const z = frame.width/camera.width
+  const x = (p.x - camera.center.x) * z + frame.width/2
+  const y = (p.y - camera.center.y) * z + frame.width/2
+
+  return { x, y }
+}
