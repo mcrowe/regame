@@ -30,8 +30,9 @@ const Polygon = (props: PolygonProps) => (context: RenderContext) => {
   const ps = props.points.map(p => worldToScreen(p, camera, frame))
 
   ctx.fillStyle = props.color || 'black'
-  ctx.moveTo(ps[0].x, ps[0].y)
+
   ctx.beginPath()
+  ctx.moveTo(ps[0].x, ps[0].y)
 
   for (let i = 1; i < ps.length; i++) {
     const p = ps[i]
@@ -39,6 +40,7 @@ const Polygon = (props: PolygonProps) => (context: RenderContext) => {
   }
 
   ctx.closePath()
+  ctx.fill()
 }
 
 
@@ -48,7 +50,6 @@ const Circle = (props: CircleProps) => (context: RenderContext) => {
   const c = worldToScreen(props.center, camera, frame)
   const z = frame.width/camera.width
   const r = props.radius * z
-
 
   ctx.beginPath()
   ctx.fillStyle = props.color || 'black'
