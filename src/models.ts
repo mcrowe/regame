@@ -30,6 +30,7 @@ const Polygon = (props: PolygonProps) => (context: RenderContext) => {
   const ps = props.points.map(p => worldToScreen(p, camera, frame))
 
   ctx.fillStyle = props.color || 'black'
+  ctx.strokeStyle = props.color || 'black'
 
   ctx.beginPath()
   ctx.moveTo(ps[0].x, ps[0].y)
@@ -41,6 +42,7 @@ const Polygon = (props: PolygonProps) => (context: RenderContext) => {
 
   ctx.closePath()
   ctx.fill()
+  ctx.stroke()
 }
 
 
