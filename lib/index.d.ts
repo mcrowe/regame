@@ -35,5 +35,9 @@ declare var _default: {
         h: number;
         color?: string;
     }) => (context: RenderContext) => void;
+    Polygon: (props: {
+        points: Point[];
+        color?: string;
+    }) => (context: RenderContext) => void;
 };
 export default _default;

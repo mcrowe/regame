@@ -66,7 +66,7 @@ const Text = (props: TextProps) => (context: RenderContext) => {
 }
 
 
-export default { Rect, Circle, Text }
+export default { Rect, Polygon, Circle, Text }
 
 
 function worldToScreen(p: Point, camera: Camera, frame: Frame): Point {

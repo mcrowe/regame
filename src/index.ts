@@ -12,4 +12,5 @@ export default {
   Circle: Models.Circle,
   Text: Models.Text,
   Rect: Models.Rect,
+  Polygon: Models.Polygon
 }
