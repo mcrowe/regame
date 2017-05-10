@@ -27,6 +27,6 @@
     "webpack-dev-server": "^2.4.1"
   },
   "dependencies": {
-    "@mcrowe/vector2": "0.0.2"
+    "@mcrowe/vector2": "0.0.3"
   }
 }
