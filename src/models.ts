@@ -17,8 +17,10 @@ const Rect = (props: RectProps) => (context: RenderContext) => {
 
   ctx.beginPath()
   ctx.fillStyle = props.color || 'black'
+  ctx.strokeStyle = props.color || 'black'
   ctx.rect(p.x, p.y, w, h)
   ctx.fill()
+  ctx.stroke()
 }
 
 
