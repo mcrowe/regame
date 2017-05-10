@@ -10,6 +10,10 @@ type TextProps = { p: Point, message: string, size?: number, color?: string }
 const Rect = (props: RectProps) => (context: RenderContext) => {
   const { ctx, frame, camera } = context
 
+  if (!isRectVisible(props, camera)) {
+    return
+  }
+
   const p = worldToScreen(props.p, camera, frame)
   const z = frame.width/camera.width
   const w = props.w * z
@@ -26,6 +30,12 @@ const Rect = (props: RectProps) => (context: RenderContext) => {
 
 const Polygon = (props: PolygonProps) => (context: RenderContext) => {
   const { ctx, frame, camera } = context
+
+
+  // Don't bother drawing if its out of the scene.
+  if (!isRectVisible(polygonBoundingRect(props.points), camera)) {
+    return
+  }
 
   const z = frame.width/camera.width
 
@@ -50,6 +60,11 @@ const Polygon = (props: PolygonProps) => (context: RenderContext) => {
 
 const Circle = (props: CircleProps) => (context: RenderContext) => {
   const { ctx, frame, camera } = context
+
+  // Don't bother drawing if its out of the scene.
+  if (!isRectVisible(circleBoundingRect(props), camera)) {
+    return
+  }
 
   const c = worldToScreen(props.center, camera, frame)
   const z = frame.width/camera.width
@@ -80,4 +95,70 @@ function worldToScreen(p: Point, camera: Camera, frame: Frame): Point {
   const y = (p.y - camera.center.y) * z + frame.width/2
 
   return { x, y }
+}
+
+
+interface IRectangle {
+  p: Point
+  w: number
+  h: number
+}
+
+
+interface ICircle {
+  center: Point,
+  radius: number
+}
+
+
+function isRectVisible(rect: IRectangle, camera: Camera): boolean {
+  const { p, w, h } = rect
+
+  return p.x + w >= camera.center.x - camera.width/2 &&
+         p.x <= camera.center.x + camera.width/2 &&
+         p.y + h >= camera.center.y - camera.width/2 &&
+         p.y <= camera.center.y + camera.width/2
+}
+
+
+function circleBoundingRect(circle: ICircle): IRectangle {
+  const { center, radius } = circle
+
+  return {
+    p: {
+      x: center.x - radius,
+      y: center.y - radius,
+    },
+    w: radius * 2,
+    h: radius * 2
+  }
+}
+
+
+function polygonBoundingRect(points: Point[]): IRectangle {
+  let x1 = Infinity
+  let x2 = -Infinity
+  let y1 = Infinity
+  let y2 = -Infinity
+
+  for (let point of points) {
+    if (point.x < x1) {
+      x1 = point.x
+    }
+    if (point.x > x2) {
+      x2 = point.x
+    }
+    if (point.y < y1) {
+      y1 = point.y
+    }
+    if (point.y > y2) {
+      y2 = point.y
+    }
+  }
+
+  return {
+    p: { x: x1, y: y1 },
+    w: x2 - x1,
+    h: y2 - y1
+  }
 }
