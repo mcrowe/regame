@@ -1,6 +1,6 @@
 {
   "name": "@mcrowe/regame",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A React-inspired 2d game engine for Typescript.",
   "author": "Mitch Crowe <code@mitchcrowe.com> (http://www.mitchcrowe.com)",
   "license": "ISC",
