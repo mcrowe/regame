@@ -2,6 +2,7 @@ import { Point, Camera, Model, Scene, RenderContext, Frame} from './types'
 
 
 type RectProps = { p: Point, w: number, h: number, color?: string }
+type LineProps = { a: Point, b: Point, w: number, color?: string }
 type CircleProps = { center: Point, radius: number, color?: string }
 type PolygonProps = { points: Point[], color?: string }
 type TextProps = { p: Point, message: string, size?: number, color?: string }
@@ -18,6 +19,8 @@ const Rect = (props: RectProps) => (context: RenderContext) => {
   const z = frame.width/camera.width
   const w = props.w * z
   const h = props.h * z
+
+  ctx.lineWidth = 1
 
   ctx.beginPath()
   ctx.fillStyle = props.color || 'black'
@@ -43,6 +46,7 @@ const Polygon = (props: PolygonProps) => (context: RenderContext) => {
 
   ctx.fillStyle = props.color || 'black'
   ctx.strokeStyle = props.color || 'black'
+  ctx.lineWidth = 1
 
   ctx.beginPath()
   ctx.moveTo(ps[0].x, ps[0].y)
@@ -70,10 +74,36 @@ const Circle = (props: CircleProps) => (context: RenderContext) => {
   const z = frame.width/camera.width
   const r = props.radius * z
 
+  ctx.lineWidth = 1
+
   ctx.beginPath()
   ctx.fillStyle = props.color || 'black'
   ctx.arc(c.x, c.y, r, 0, 2 * Math.PI)
   ctx.fill()
+}
+
+
+const Line = (props: LineProps) => (context: RenderContext) => {
+  const { ctx, frame, camera } = context
+
+  // Don't bother drawing if its out of the scene.
+  // if (!isRectVisible(lineBoundingRect(props), camera)) {
+  //   return
+  // }
+
+  const a = worldToScreen(props.a, camera, frame)
+  const b = worldToScreen(props.b, camera, frame)
+
+  const z = frame.width/camera.width
+  const w = props.w * z
+
+  ctx.strokeStyle = props.color || 'black'
+  ctx.lineWidth = w
+
+  ctx.beginPath()
+  ctx.moveTo(a.x, a.y)
+  ctx.lineTo(b.x, b.y)
+  ctx.stroke()
 }
 
 
@@ -86,7 +116,7 @@ const Text = (props: TextProps) => (context: RenderContext) => {
 }
 
 
-export default { Rect, Polygon, Circle, Text }
+export default { Rect, Polygon, Circle, Line, Text }
 
 
 function worldToScreen(p: Point, camera: Camera, frame: Frame): Point {

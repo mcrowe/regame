@@ -1,6 +1,33 @@
 import Game from './game';
 import { Camera, Frame, Point, RenderContext } from './types';
 declare var _default: {
+    Rect: (props: {
+        p: Point;
+        w: number;
+        h: number;
+        color?: string;
+    }) => (context: RenderContext) => void;
+    Polygon: (props: {
+        points: Point[];
+        color?: string;
+    }) => (context: RenderContext) => void;
+    Circle: (props: {
+        center: Point;
+        radius: number;
+        color?: string;
+    }) => (context: RenderContext) => void;
+    Line: (props: {
+        a: Point;
+        b: Point;
+        w: number;
+        color?: string;
+    }) => (context: RenderContext) => void;
+    Text: (props: {
+        p: Point;
+        message: string;
+        size?: number;
+        color?: string;
+    }) => (context: RenderContext) => void;
     Canvas: {
         ensure: (el: HTMLElement) => HTMLCanvasElement;
         findById: (id: string) => HTMLCanvasElement;
@@ -17,26 +44,5 @@ declare var _default: {
         };
     };
     Game: typeof Game;
-    Circle: (props: {
-        center: Point;
-        radius: number;
-        color?: string;
-    }) => (context: RenderContext) => void;
-    Text: (props: {
-        p: Point;
-        message: string;
-        size?: number;
-        color?: string;
-    }) => (context: RenderContext) => void;
-    Rect: (props: {
-        p: Point;
-        w: number;
-        h: number;
-        color?: string;
-    }) => (context: RenderContext) => void;
-    Polygon: (props: {
-        points: Point[];
-        color?: string;
-    }) => (context: RenderContext) => void;
 };
 export default _default;

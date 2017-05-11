@@ -15,6 +15,12 @@ declare var _default: {
         radius: number;
         color?: string;
     }) => (context: RenderContext) => void;
+    Line: (props: {
+        a: Point;
+        b: Point;
+        w: number;
+        color?: string;
+    }) => (context: RenderContext) => void;
     Text: (props: {
         p: Point;
         message: string;

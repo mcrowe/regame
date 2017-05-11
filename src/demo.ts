@@ -22,7 +22,8 @@ function render(_state: IState): Scene {
     Regame.Polygon({points: [{x: -20, y: -20}, {x: -20, y: -40}, {x: 20, y: -40}, {x: 20, y: -20}], color: '#00f'}),
     // Off-screen poly
     Regame.Polygon({points: [{x: -100, y: 0}, {x: -51, y: 0}, {x: -51, y: -40}], color: '#00f'}),
-    Regame.Text({p: {x: 0, y: 580}, message: 'Hello World!'})
+    Regame.Text({p: {x: 0, y: 580}, message: 'Hello World!'}),
+    Regame.Line({a: {x: 0, y: 0}, b: {x: 20, y: 30}, w: 0.5, color: '#0ff'})
   ]
 }
 
