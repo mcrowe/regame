@@ -29,7 +29,7 @@ function render(_state: IState): Scene {
 
 function update(_state: IState) {
   let n = 0
-  for (let i = 0; i < 20000000; i++) {
+  for (let i = 0; i < 40000000; i++) {
     n += i
   }
 }

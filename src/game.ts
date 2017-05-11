@@ -41,6 +41,8 @@ class Game<T> {
   }
 
   loop() {
+    requestAnimationFrame(() => this.loop())
+
     this.diagnostics.numFrames += 1
 
     const now = Date.now()
@@ -51,25 +53,18 @@ class Game<T> {
     const scene = this.doRender()
     const camera = this.getCamera(this.state)
     this.doDraw(scene, camera)
-
-    requestAnimationFrame(() => this.loop())
   }
 
   doUpdate(dt) {
     const t0 = Date.now()
     this.update(this.state, dt)
-    const tf = Date.now()
-
-    this.diagnostics.totalUpdateTime += tf - t0
+    this.diagnostics.totalUpdateTime += Date.now() - t0
   }
 
   doRender() {
     const t0 = Date.now()
     const scene = this.render(this.state)
-    const tf = Date.now()
-
-    this.diagnostics.totalRenderTime += tf - t0
-
+    this.diagnostics.totalRenderTime += Date.now() - t0
     return scene
   }
 
@@ -82,9 +77,7 @@ class Game<T> {
       model({ctx: this.ctx, frame, camera})
     }
 
-    const tf = Date.now()
-
-    this.diagnostics.totalDrawTime += tf - t0
+    this.diagnostics.totalDrawTime += Date.now() - t0
   }
 
   getReport() {
