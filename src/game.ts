@@ -1,53 +1,123 @@
 import Util from './util'
 import Canvas from './canvas'
-import FrameCounter from './frame-counter'
 import { Scene, Camera, Frame, Model } from './types'
 
 
-type Updater<T> = (state: T, dt: number) => void
-type Renderer<T> = (state: T) => Scene
-type CameraMapper<T> = (state: T) => Camera
+export type IUpdater<T> = (state: T, dt: number) => void
+export type IRenderer<T> = (state: T) => Scene
+export type ICameraMapper<T> = (state: T) => Camera
 
 
-function make<T>(el: HTMLElement | null,
-                 update: Updater<T>,
-                 render: Renderer<T>,
-                 getCamera: CameraMapper<T>,
-                 initialState: T) {
-
-  const canvas = Canvas.ensure(el)
-  const ctx = Canvas.getContext(canvas)
-
-  const state = initialState
-
-  let t = Date.now()
-
-  const frameCounter = new FrameCounter()
-
-  function loop() {
-    frameCounter.tick()
-    const now = Date.now()
-    const dt = now - t
-    t = now
-
-    update(state, dt)
-    const scene = render(state)
-    const camera = getCamera(state)
-    draw(canvas, ctx, scene, camera)
-
-    requestAnimationFrame(loop)
-  }
-  loop()
-
-  return {
-    getFPS() {
-      return frameCounter.getRate()
-    }
-  }
+export interface IDiagnostics {
+  lastReportedAt: number
+  numFrames: number
+  totalUpdateTime: number
+  totalRenderTime: number
+  totalDrawTime: number
 }
 
 
-export default { make }
+class Game<T> {
+
+  state: T
+  canvas: HTMLCanvasElement
+  ctx: CanvasRenderingContext2D
+  update: IUpdater<T>
+  render: IRenderer<T>
+  getCamera: ICameraMapper<T>
+  lastFrameAt: number
+  diagnostics: IDiagnostics
+
+  constructor(el: HTMLElement | null, update: IUpdater<T>, render: IRenderer<T>, getCamera: ICameraMapper<T>, initialState: T) {
+    this.update = update
+    this.render = render
+    this.getCamera = getCamera
+    this.canvas = Canvas.ensure(el)
+    this.ctx = Canvas.getContext(this.canvas)
+    this.state = initialState
+    this.lastFrameAt = Date.now()
+    this.resetDiagnostics()
+    this.loop()
+  }
+
+  loop() {
+    this.diagnostics.numFrames += 1
+
+    const now = Date.now()
+    const dt = now - this.lastFrameAt
+    this.lastFrameAt = now
+
+    this.doUpdate(dt)
+    const scene = this.doRender()
+    const camera = this.getCamera(this.state)
+    this.doDraw(scene, camera)
+
+    requestAnimationFrame(() => this.loop())
+  }
+
+  doUpdate(dt) {
+    const t0 = Date.now()
+    this.update(this.state, dt)
+    const tf = Date.now()
+
+    this.diagnostics.totalUpdateTime += tf - t0
+  }
+
+  doRender() {
+    const t0 = Date.now()
+    const scene = this.render(this.state)
+    const tf = Date.now()
+
+    this.diagnostics.totalRenderTime += tf - t0
+
+    return scene
+  }
+
+  doDraw(scene: Scene, camera: Camera) {
+    const t0 = Date.now()
+    const frame = Canvas.getFrame(this.canvas)
+    clear(this.ctx, frame)
+
+    for (let model of getSceneModels(scene)) {
+      model({ctx: this.ctx, frame, camera})
+    }
+
+    const tf = Date.now()
+
+    this.diagnostics.totalDrawTime += tf - t0
+  }
+
+  getReport() {
+    const { lastReportedAt, numFrames, totalDrawTime, totalRenderTime, totalUpdateTime } = this.diagnostics
+
+    const dt = Date.now() - lastReportedAt
+
+    const report = {
+      fps: numFrames * 1000 / dt,
+      draw: totalDrawTime / numFrames,
+      render: totalRenderTime / numFrames,
+      update: totalUpdateTime / numFrames
+    }
+
+    this.resetDiagnostics()
+
+    return report
+  }
+
+  resetDiagnostics() {
+    this.diagnostics = {
+      lastReportedAt: Date.now(),
+      numFrames: 0,
+      totalUpdateTime: 0,
+      totalRenderTime: 0,
+      totalDrawTime: 0
+    }
+  }
+
+}
+
+
+export default Game
 
 
 function draw(canvas: HTMLCanvasElement,

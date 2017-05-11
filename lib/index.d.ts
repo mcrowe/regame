@@ -1,4 +1,5 @@
-import { Camera, Model, Frame, Point, RenderContext } from './types';
+import Game from './game';
+import { Camera, Frame, Point, RenderContext } from './types';
 declare var _default: {
     Canvas: {
         ensure: (el: HTMLElement) => HTMLCanvasElement;
@@ -15,9 +16,7 @@ declare var _default: {
             y: number;
         };
     };
-    makeGame: <T>(el: HTMLElement, update: (state: T, dt: number) => void, render: (state: T) => (Model | Model[])[], getCamera: (state: T) => Camera, initialState: T) => {
-        getFPS(): number;
-    };
+    Game: typeof Game;
     Circle: (props: {
         center: Point;
         radius: number;

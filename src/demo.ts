@@ -11,7 +11,7 @@ const state: IState = {}
 const canvas = Regame.Canvas.findById('canvas')
 
 
-Regame.makeGame<IState>(canvas, update, render, getCamera, state)
+const game = new Regame.Game<IState>(canvas, update, render, getCamera, state)
 
 
 
@@ -28,6 +28,10 @@ function render(_state: IState): Scene {
 
 
 function update(_state: IState) {
+  let n = 0
+  for (let i = 0; i < 20000000; i++) {
+    n += i
+  }
 }
 
 
@@ -37,3 +41,7 @@ function getCamera(_state: IState): Camera {
     width: 100
   }
 }
+
+setInterval(() => {
+  console.log(game.getReport())
+}, 5000)
