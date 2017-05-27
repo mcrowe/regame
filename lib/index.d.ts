@@ -28,6 +28,12 @@ declare var _default: {
         size?: number;
         color?: string;
     }) => (context: RenderContext) => void;
+    WorldText: (props: {
+        p: Point;
+        message: string;
+        size?: number;
+        color?: string;
+    }) => (context: RenderContext) => void;
     Canvas: {
         ensure: (el: HTMLElement) => HTMLCanvasElement;
         findById: (id: string) => HTMLCanvasElement;
