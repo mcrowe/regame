@@ -116,7 +116,24 @@ const Text = (props: TextProps) => (context: RenderContext) => {
 }
 
 
-export default { Rect, Polygon, Circle, Line, Text }
+const WorldText = (props: TextProps) => (context: RenderContext) => {
+  const { ctx, frame, camera } = context
+
+  // Don't bother drawing if its out of the scene.
+  // if (!isRectVisible(lineBoundingRect(props), camera)) {
+  //   return
+  // }
+
+  const p = worldToScreen(props.p, camera, frame)
+
+  var opts = Object.assign({}, {size: 50, color: 'black'}, props)
+  ctx.font = opts.size + 'px "Comic Sans MS"'
+  ctx.fillStyle = opts.color
+  ctx.fillText(opts.message, p.x, p.y)
+}
+
+
+export default { Rect, Polygon, Circle, Line, Text, WorldText }
 
 
 function worldToScreen(p: Point, camera: Camera, frame: Frame): Point {
