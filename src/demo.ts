@@ -46,3 +46,15 @@ function getCamera(_state: IState): Camera {
 setInterval(() => {
   console.log(game.getReport())
 }, 5000)
+
+
+document.addEventListener('click', e => {
+  const frame = Regame.Canvas.getFrame(canvas)
+  const camera = getCamera(state)
+  const pWindow = {x: e.clientX, y: e.clientY}
+  const pWorld = Regame.Coord.window2world(pWindow, frame, camera)
+
+
+  console.log('pWindow', pWindow)
+  console.log('pWorld', pWorld)
+})

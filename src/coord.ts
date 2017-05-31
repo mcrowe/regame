@@ -14,7 +14,7 @@ function window2frame(p: Point, frame: Frame): Point {
 
 
 function frame2world(p: Point, frame: Frame, camera: Camera): Point {
-  const s = camera.width/frame.width
+  const s = camera.width/frame.width * window.devicePixelRatio
   const cameraHeight = camera.width * frame.height/frame.width
 
   const x = p.x*s + camera.center.x - camera.width/2
@@ -25,7 +25,7 @@ function frame2world(p: Point, frame: Frame, camera: Camera): Point {
 
 
 function world2frame(p: Point, frame: Frame, camera: Camera) {
-  const s = frame.width/camera.width
+  const s = frame.width/camera.width / window.devicePixelRatio
 
   const x = (p.x - camera.center.x)*s + frame.width/2
   const y = (p.y - camera.center.y)*s + frame.height/2
