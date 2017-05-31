@@ -69,8 +69,13 @@ class Game<T> {
   }
 
   doDraw(scene: Scene, camera: Camera) {
+    resize(this.canvas)
+
     const t0 = Date.now()
     const frame = Canvas.getFrame(this.canvas)
+
+
+
     clear(this.ctx, frame)
 
     for (let model of getSceneModels(scene)) {
@@ -134,4 +139,17 @@ function clear(ctx: CanvasRenderingContext2D, frame: Frame) {
 
 function getSceneModels(scene: Scene): Model[] {
   return Util.flatten(scene)
+}
+
+
+function resize(canvas: HTMLCanvasElement) {
+  const dp = window.devicePixelRatio
+
+  const displayWidth = Math.floor(canvas.clientWidth * dp)
+  const displayHeight = Math.floor(canvas.clientHeight * dp)
+
+  if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+    canvas.width = displayWidth
+    canvas.height = displayHeight
+  }
 }
