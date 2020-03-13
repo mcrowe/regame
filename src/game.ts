@@ -1,12 +1,10 @@
-import Util from './util'
-import Canvas from './canvas'
-import { Scene, Camera, Frame, Model } from './types'
-
+import * as Util from './util'
+import * as Canvas from './canvas'
+import { IScene, ICamera, IFrame, IModel } from './types'
 
 export type IUpdater<T> = (state: T, dt: number) => void
-export type IRenderer<T> = (state: T) => Scene
-export type ICameraMapper<T> = (state: T) => Camera
-
+export type IRenderer<T> = (state: T) => IScene
+export type ICameraMapper<T> = (state: T) => ICamera
 
 export interface IDiagnostics {
   lastReportedAt: number
@@ -16,9 +14,7 @@ export interface IDiagnostics {
   totalDrawTime: number
 }
 
-
 class Game<T> {
-
   state: T
   canvas: HTMLCanvasElement
   ctx: CanvasRenderingContext2D
@@ -28,7 +24,13 @@ class Game<T> {
   lastFrameAt: number
   diagnostics: IDiagnostics
 
-  constructor(el: HTMLElement | null, update: IUpdater<T>, render: IRenderer<T>, getCamera: ICameraMapper<T>, initialState: T) {
+  constructor(
+    el: HTMLElement | null,
+    update: IUpdater<T>,
+    render: IRenderer<T>,
+    getCamera: ICameraMapper<T>,
+    initialState: T
+  ) {
     this.update = update
     this.render = render
     this.getCamera = getCamera
@@ -68,30 +70,34 @@ class Game<T> {
     return scene
   }
 
-  doDraw(scene: Scene, camera: Camera) {
+  doDraw(scene: IScene, camera: ICamera) {
     resize(this.canvas)
 
     const t0 = Date.now()
     const frame = Canvas.getFrame(this.canvas)
 
-
-
     clear(this.ctx, frame)
 
     for (let model of getSceneModels(scene)) {
-      model({ctx: this.ctx, frame, camera})
+      model({ ctx: this.ctx, frame, camera })
     }
 
     this.diagnostics.totalDrawTime += Date.now() - t0
   }
 
   getReport() {
-    const { lastReportedAt, numFrames, totalDrawTime, totalRenderTime, totalUpdateTime } = this.diagnostics
+    const {
+      lastReportedAt,
+      numFrames,
+      totalDrawTime,
+      totalRenderTime,
+      totalUpdateTime
+    } = this.diagnostics
 
     const dt = Date.now() - lastReportedAt
 
     const report = {
-      fps: numFrames * 1000 / dt,
+      fps: (numFrames * 1000) / dt,
       draw: totalDrawTime / numFrames,
       render: totalRenderTime / numFrames,
       update: totalUpdateTime / numFrames
@@ -111,36 +117,32 @@ class Game<T> {
       totalDrawTime: 0
     }
   }
-
 }
-
 
 export default Game
 
-
-function draw(canvas: HTMLCanvasElement,
-              ctx: CanvasRenderingContext2D,
-              scene: Scene,
-              camera: Camera) {
+function draw(
+  canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
+  scene: IScene,
+  camera: ICamera
+) {
   const frame = Canvas.getFrame(canvas)
   clear(ctx, frame)
 
   for (let model of getSceneModels(scene)) {
-    model({ctx, frame, camera})
+    model({ ctx, frame, camera })
   }
 }
 
-
-function clear(ctx: CanvasRenderingContext2D, frame: Frame) {
+function clear(ctx: CanvasRenderingContext2D, frame: IFrame) {
   ctx.clearRect(0, 0, frame.width, frame.height)
   ctx.fillStyle = '#000000'
 }
 
-
-function getSceneModels(scene: Scene): Model[] {
+function getSceneModels(scene: IScene): IModel[] {
   return Util.flatten(scene)
 }
-
 
 function resize(canvas: HTMLCanvasElement) {
   const dp = window.devicePixelRatio

@@ -1,4 +1,1 @@
-declare var _default: {
-    flatten: (xs: any) => any[];
-};
-export default _default;
+export declare function flatten(xs: any[]): any[];

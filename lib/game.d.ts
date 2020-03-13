@@ -1,7 +1,7 @@
-import { Scene, Camera, Model } from './types';
+import { IScene, ICamera } from './types';
 export declare type IUpdater<T> = (state: T, dt: number) => void;
-export declare type IRenderer<T> = (state: T) => Scene;
-export declare type ICameraMapper<T> = (state: T) => Camera;
+export declare type IRenderer<T> = (state: T) => IScene;
+export declare type ICameraMapper<T> = (state: T) => ICamera;
 export interface IDiagnostics {
     lastReportedAt: number;
     numFrames: number;
@@ -21,8 +21,8 @@ declare class Game<T> {
     constructor(el: HTMLElement | null, update: IUpdater<T>, render: IRenderer<T>, getCamera: ICameraMapper<T>, initialState: T);
     loop(): void;
     doUpdate(dt: any): void;
-    doRender(): (Model | Model[])[];
-    doDraw(scene: Scene, camera: Camera): void;
+    doRender(): IScene;
+    doDraw(scene: IScene, camera: ICamera): void;
     getReport(): {
         fps: number;
         draw: number;

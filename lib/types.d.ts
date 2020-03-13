@@ -1,20 +1,20 @@
-export interface Point {
+export interface IPoint {
     x: number;
     y: number;
 }
-export interface Frame {
+export interface IFrame {
     width: number;
     height: number;
-    offset: Point;
+    offset: IPoint;
 }
-export interface Camera {
-    center: Point;
+export interface ICamera {
+    center: IPoint;
     width: number;
 }
-export interface RenderContext {
+export interface IRenderContext {
     ctx: CanvasRenderingContext2D;
-    frame: Frame;
-    camera: Camera;
+    frame: IFrame;
+    camera: ICamera;
 }
-export declare type Model = (context: RenderContext) => Model[] | void;
-export declare type Scene = Array<Model | Model[]>;
+export declare type IModel = (context: IRenderContext) => IModel[] | void;
+export declare type IScene = Array<IModel | IModel[]>;

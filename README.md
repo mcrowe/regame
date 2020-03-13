@@ -14,29 +14,29 @@ A React-inspired 2d game engine for Typescript.
 > npm install @mcrowe/regame --save
 
 ```js
-import Regame, { Camera, Scene } from '@mcrowe/regame'
+import * as Regame from '@mcrowe/regame'
 
 const canvas = document.getElementById('game')
 
-type State = { x: number }
-
-function camera(state: State): Camera {
-  return { center: {x: 0, y: 0}, width: 100 }
+interface IState {
+  x: number;
 }
 
-function render(state: State): Scene {
-  return [
-    Regame.Circle({center: { x: state.x, y: 300 }, radius: 20})
-  ]
+function camera(state: IState): Regame.Camera {
+  return { center: { x: 0, y: 0 }, width: 100 }
 }
 
-function update(state: State, dt: number): void {
+function render(state: IState): Regame.Scene {
+  return [Regame.Circle({ center: { x: state.x, y: 300 }, radius: 20 })]
+}
+
+function update(state: IState, dt: number): void {
   state.x += 0.1 * dt
 }
 
-const initialState: State = { x: 0 }
+const initialState: IState = { x: 0 }
 
-Regame.makeGame<State>(canvas, update, render, camera, initialState)
+Regame.makeGame < IState > (canvas, update, render, camera, initialState)
 ```
 
 ## Development
@@ -60,4 +60,3 @@ Publish to npm:
 2. Build using `npm run build`
 
 3. Publish using `npm publish --access=public`
-

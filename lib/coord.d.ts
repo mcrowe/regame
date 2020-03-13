@@ -1,11 +1,8 @@
-import { Point, Frame, Camera } from './types';
-declare var _default: {
-    window2world: (p: Point, frame: Frame, camera: Camera) => Point;
-    window2frame: (p: Point, frame: Frame) => Point;
-    frame2world: (p: Point, frame: Frame, camera: Camera) => Point;
-    world2frame: (p: Point, frame: Frame, camera: Camera) => {
-        x: number;
-        y: number;
-    };
+import { IPoint, IFrame, ICamera } from './types';
+export declare function window2world(p: IPoint, frame: IFrame, camera: ICamera): IPoint;
+export declare function window2frame(p: IPoint, frame: IFrame): IPoint;
+export declare function frame2world(p: IPoint, frame: IFrame, camera: ICamera): IPoint;
+export declare function world2frame(p: IPoint, frame: IFrame, camera: ICamera): {
+    x: number;
+    y: number;
 };
-export default _default;
