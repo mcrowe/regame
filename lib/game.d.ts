@@ -9,7 +9,7 @@ export interface IDiagnostics {
     totalRenderTime: number;
     totalDrawTime: number;
 }
-declare class Game<T> {
+export default class Game<T> {
     state: T;
     canvas: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
@@ -31,4 +31,3 @@ declare class Game<T> {
     };
     resetDiagnostics(): void;
 }
-export default Game;

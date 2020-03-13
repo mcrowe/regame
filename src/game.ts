@@ -14,7 +14,7 @@ export interface IDiagnostics {
   totalDrawTime: number
 }
 
-class Game<T> {
+export default class Game<T> {
   state: T
   canvas: HTMLCanvasElement
   ctx: CanvasRenderingContext2D
@@ -116,22 +116,6 @@ class Game<T> {
       totalRenderTime: 0,
       totalDrawTime: 0
     }
-  }
-}
-
-export default Game
-
-function draw(
-  canvas: HTMLCanvasElement,
-  ctx: CanvasRenderingContext2D,
-  scene: IScene,
-  camera: ICamera
-) {
-  const frame = Canvas.getFrame(canvas)
-  clear(ctx, frame)
-
-  for (let model of getSceneModels(scene)) {
-    model({ ctx, frame, camera })
   }
 }
 
